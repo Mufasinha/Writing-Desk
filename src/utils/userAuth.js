@@ -8,9 +8,20 @@ import
     signOut
 }
 from 'firebase/auth';
+import { db } from './firebase';
+import { doc, setDoc } from 'firebase/firestore';
 import Router from 'next/router';
 
 const auth = userAuth;
+
+// Salva os dados no firestore
+const SaveUserData = async (displayName, email, uid) => {
+    await setDoc(doc(db, 'users', uid), {
+        displayName,
+        email,
+        uid
+    });
+}
 
 // Faz uma série de verificações para saber se o usuário está logado ou não
 const VerifyAuth = (props) => {
@@ -38,6 +49,7 @@ const CreateUser = (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user;
+        SaveUserData(user.displayName, user.email, user.uid);
         // console.log(user);
     })
     .catch((error) => {
