@@ -9,3 +9,7 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
+
+body{
+    background-color: #EBE5C1;
+}

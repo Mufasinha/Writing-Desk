@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { VerifyAuth, SignInWithEmail, CreateGoogleUser } from '../utils/userAuth';
+import { CreateUser, VerifyAuth, CreateGoogleUser } from '../utils/userAuth';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-Home.title = 'Login';
+Home.title = 'Cadastro';
 
 export default function Home(){
 
@@ -11,7 +11,8 @@ export default function Home(){
 
 	const [user, setUser] = useState({
 		email: '',
-		password: ''
+		password: '',
+		checkPassword: ''
 	});
 
 	useEffect(() => {
@@ -20,32 +21,36 @@ export default function Home(){
 
 	const valueInput = e => setUser({...user, [e.target.name]: e.target.value});
 
-	const signIn = (e) => {
+	const createNewUser = (e) => {
 		e.preventDefault();
+		if(user.password !== user.checkPassword){
+			alert('Verifique as senhas');
+			return
+		}
 		try{
-			SignInWithEmail(user.email, user.password);
+			CreateUser(user.email, user.password);
 		}
 		catch(error){
 			console.log(error);
 		}
 	}
 
-	const signInWithGoogle = () => {
+	const createNewGoogleUser = () => {
 		CreateGoogleUser();
 	}
 
 	return(
 		<div className='bg-primary h-screen flex justify-center grid grid-cols-1 place-items-center'>
 			<form
-				className='grid bg-slate-100 w-11/12 lg:w-1/3 h-fit p-5 rounded-2xl text-center shadow-2xl'
-				onSubmit={signIn}
+				className='grid lg:w-1/3 py-10 bg-slate-100 w-11/12 h-fit p-5 rounded-lg text-center shadow-2xl'
+				onSubmit={createNewUser}
 			>
 				<h1 className='text-2xl font-semibold'>Entrar</h1>
 				<h2 className='text-xl font-semibold'>Use sua conta Google</h2>
 				<button
 					className='bg-blue-600 text-slate-100 py-2 px-5 w-fit justify-self-center rounded-md shadow-xl'
 					type='button'
-					onClick={signInWithGoogle}
+					onClick={createNewGoogleUser}
 				>
 					Google
 				</button>
@@ -66,8 +71,16 @@ export default function Home(){
 						onChange={valueInput}
 						value={user.password}
 					/>
-					<Link href='cadastro'>
-						<a className='underline'>ou crie uma nova conta...</a>
+					<input
+						className='bg-slate-100 border-2 border-gray-400 rounded-md p-2'
+						placeholder='Confirme a senha'
+						type='password'
+						name='checkPassword'
+						onChange={valueInput}
+						value={user.checkPassword}
+					/>
+					<Link href='/'>
+						<a className='underline'>ou entre com sua conta</a>
 					</Link>
 					<button
 						className='bg-blue-600 text-slate-100 py-2 px-5 w-fit justify-self-end rounded-md shadow-xl'

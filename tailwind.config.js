@@ -6,7 +6,11 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				'primary': '#EBE5C1'
+				'primary': '#EBE5C1',
+				'secondary': '#E8DFA6'
+			},
+			dropShadow: {
+				'primary': '0 4px 3px rgba(0 0 0 / 0.3)'
 			}
 		},
 	},

@@ -5,23 +5,29 @@ import
     onAuthStateChanged,
     GoogleAuthProvider,
     signInWithPopup,
-    signOut
+    signOut,
+    signInWithEmailAndPassword
 }
 from 'firebase/auth';
 import { db } from './firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import Router from 'next/router';
 
 const auth = userAuth;
 
-// Salva os dados no firestore
-const SaveUserData = async (displayName, email, uid) => {
-    await setDoc(doc(db, 'users', uid), {
-        displayName,
-        email,
-        uid
+// Entra com email e senha
+const SignInWithEmail = (email, password) => {
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
     });
 }
+
 
 // Faz uma série de verificações para saber se o usuário está logado ou não
 const VerifyAuth = (props) => {
@@ -49,7 +55,7 @@ const CreateUser = (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user;
-        SaveUserData(user.displayName, user.email, user.uid);
+        SaveUserData(user.displayName, user.email, user.uid, user.metadata.creationTime, user.phoneNumber, user.photoURL);
         // console.log(user);
     })
     .catch((error) => {
@@ -71,7 +77,8 @@ const CreateGoogleUser = () => {
         
         // Dados do usuário registrado
         const user = result.user;
-        // console.log(user);
+        SaveUserData(user.displayName, user.email, user.uid, user.metadata.creationTime, user.phoneNumber, user.photoURL);
+        console.log(user);
     }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -86,6 +93,36 @@ const CreateGoogleUser = () => {
     });
 }
 
+// Salva os dados no firestore
+const SaveUserData = async (displayName, email, uid, creationTime, phoneNumber, photoURL) => {
+    await setDoc(doc(db, 'users', uid), {
+        displayName,
+        email,
+        uid,
+        creationTime,
+        phoneNumber,
+        photoURL,
+        bio: '',
+        following: 0,
+        followers: 0
+    });
+}
+
+// Obtém os dados do perfil atual
+const getUserInfo = async (uid) => {
+    const docRef = doc(db, 'users', uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        // console.log('Document data:', docSnap.data());
+        return docSnap.data();
+    } else {
+        // doc.data() will be undefined in this case
+        console.log('No such document!');
+    }
+
+}
+
 // Desloga o usuário
 const Signout = () => {
     signOut(auth)
@@ -98,4 +135,4 @@ const Signout = () => {
     });
 }
 
-export { CreateUser, VerifyAuth, CreateGoogleUser, Signout };
+export { CreateUser, VerifyAuth, getUserInfo, CreateGoogleUser, Signout, SignInWithEmail };
