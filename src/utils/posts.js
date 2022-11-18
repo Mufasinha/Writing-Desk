@@ -26,18 +26,6 @@ const getPost = async () => {
     return posts;
 }
 
-// const searchPost = async (search) => {
-//     const q = query(collection(db, 'posts'), where('title', '==', search));
-
-//     let posts = [];
-//     const querySnapshot = await getDocs(q);
-//         querySnapshot.forEach((doc) => {
-//         // console.log(doc.id, ' => ', doc.data());
-//         posts.push(doc.data());
-//     });
-//     return posts;
-// }
-
 const getUserPosts = async (uid) => {
     const q = query(collection(db, 'posts'), where('uid', '==', uid), orderBy('date', 'desc'));
 

@@ -52,7 +52,7 @@ export default function Navbar(){
                                 </Link>
                             </li>
                             <li>
-                                <Link href={`${user.uid}/galeria`}>
+                                <Link href={`/${user.uid}/galeria`}>
                                     <a
                                         className='relative group flex justify-center px-2 py-1.5 text-gray-700 rounded hover:bg-gray-50 hover:text-gray-500'
                                     >

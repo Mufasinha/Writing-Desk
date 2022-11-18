@@ -104,7 +104,9 @@ const SaveUserData = async (displayName, email, uid, creationTime, phoneNumber, 
         photoURL,
         bio: '',
         following: 0,
-        followers: 0
+        followers: 0,
+        followingUid: [],
+        followersUid: []
     });
 }
 

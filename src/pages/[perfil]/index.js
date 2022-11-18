@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { getUserInfo } from '../../utils/userAuth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { userAuth } from '../../utils/firebase';
+import { follow, Verify } from '../../utils/follows';
 
 Perfil.title = 'Perfil';
 
@@ -72,30 +73,42 @@ export default function Perfil(){
         getUser();
     }, [route, auth]);
 
+    function ProfileBtn(){
+        if(user.uid===authUser.uid){
+            return(
+                <button
+                    className='bg-white hover:bg-secondary hover:outline-white rounded-full px-3 py-2 h-fit outline outline-gray-200 border-gray-600 mr-4 mt-3'
+                >
+                    Editar perfil
+                </button>
+            );
+        }
+        else{
+
+            return(
+                <button
+                    onClick={() => follow(user.uid, authUser.uid)}
+                    className='bg-white hover:bg-secondary hover:outline-white rounded-full px-3 py-2 h-fit outline outline-gray-200 border-gray-600 mr-4 mt-3'
+                >
+                    Seguir
+                </button>
+            )
+
+        }
+    }
+
     return(
         <div className='static pb-5'>
             <Navbar />
             <div className='flex flex-col'>
                 <div className='ml-20 pt-2'>
                     <h1 className='text-black drop-shadow-primary text-2xl font-bold'>Perfil</h1>
-                    <div className='bg-white rounded-2xl h-screen mr-4 mt-5 p-5'>
+                    <div className='bg-white rounded-2xl h-full mr-4 mt-5 p-5'>
                         <div className='grid'>
                             <div className='flex justify-between'>
                                 <div className='bg-gray-600 h-24 w-24 rounded-full'>
                                 </div>
-                                { user.uid === authUser.uid
-                                    ? <button
-                                        className='bg-white hover:bg-secondary hover:outline-white rounded-full px-3 py-2 h-fit outline outline-gray-200 border-gray-600 mr-4 mt-3'
-                                    >
-                                        Editar perfil
-                                    </button>
-                                    : <button
-                                    className='bg-white hover:bg-secondary hover:outline-white rounded-full px-3 py-2 h-fit outline outline-gray-200 border-gray-600 mr-4 mt-3'
-                                >
-                                    Seguir
-                                </button>
-
-                                }
+                                <ProfileBtn />
                             </div>
                             <div className='mt-5'>
                                 { user?.displayName
@@ -105,8 +118,8 @@ export default function Perfil(){
                                 <p className='break-all'>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
                             </div>
                             <div className='flex gap-4 mt-5'>
-                                <p>{user.followers} seguidores</p>
-                                <p>{user.following} seguindo</p>
+                                <p>{user.followers} <strong>seguidores</strong></p>
+                                <p>{user.following} <strong>seguindo</strong></p>
                             </div>
                         </div>
                         <PostCard data={posts} />
