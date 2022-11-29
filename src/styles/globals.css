@@ -10,6 +10,10 @@
     -webkit-box-orient: vertical;
 }
 
+.card-title{
+    width: -webkit-fill-available
+}
+
 body{
     background-color: #EBE5C1;
 }

@@ -25,7 +25,9 @@ export default function Galeria(){
             <Navbar />
             <div className='flex flex-col'>
                 <h1 className='text-black drop-shadow-primary text-2xl ml-20 pt-3 font-bold'>Suas Resenhas</h1>
-                <PostCard data={posts} />
+                <div className='ml-20 mr-4'>
+                    <PostCard data={posts} />
+                </div>
                 <Modal />
             </div>
         </div>

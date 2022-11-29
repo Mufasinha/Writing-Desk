@@ -18,4 +18,4 @@ const Follow = async (uid, authUid) => {
     });
 }
 
-export { Follow, Verify };
+export { Follow };

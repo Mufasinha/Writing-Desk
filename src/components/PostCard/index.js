@@ -18,9 +18,9 @@ export default function PostCard(props){
         <div>
             {posts.map((post) => (
                 <Link href={`/${post.uid}/posts/${post.id}`} key={post.id}>
-                    <a className='bg-white hover:bg-secondary hover:outline-white outline outline-gray-200 drop-shadow-lg rounded-lg mt-5 ml-20 px-4 mr-4 mt-3 py-1.5 note-height cursor-pointer'>
+                    <a className='bg-white hover:bg-secondary hover:outline-white outline outline-gray-200 drop-shadow-lg rounded-lg mt-5 px-4 mt-3 py-1.5 note-height cursor-pointer'>
                         <div className='flex'>
-                            <h1 className='text-lg font-semibold'>{post.title}</h1>
+                            <h1 className='text-lg font-semibold card-title max-w-max'>{post.title}</h1>
                             <span className='mx-2'>-</span>
                             <Link href={`/${post.uid}`}>
                                 <a className='w-1/2 truncate lg:w-fit'>

@@ -1,13 +1,14 @@
 import Navbar from '../../components/Navbar';
 import Modal from '../../components/Modal';
 import PostCard from '../../components/PostCard';
+import Link from 'next/link';
 import { getUserPosts } from '../../utils/posts';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getUserInfo } from '../../utils/userAuth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { userAuth } from '../../utils/firebase';
-import { follow, Verify } from '../../utils/follows';
+import { Follow } from '../../utils/follows';
 
 Perfil.title = 'Perfil';
 
@@ -18,7 +19,6 @@ export default function Perfil(){
 
     const [authUser, setAuthUser] = useState({});
     const [posts, setPosts] = useState([]);
-
     const [user, setUser] = useState({
         bio: '',
         creationTime: '',
@@ -26,6 +26,8 @@ export default function Perfil(){
         email: '',
         followers: 0,
         following: 0,
+        followersUid: [],
+        followingUid: [],
         phoneNumber: null,
         photoURL: '',
         uid: '',
@@ -44,6 +46,8 @@ export default function Perfil(){
                 email: res.email,
                 followers: res.followers,
                 following: res.following,
+                followersUid: res.followersUid,
+                followingUid: res.followingUid,
                 phoneNumber: res.phoneNumber,
                 photoURL: res.photoURL,
                 uid: res.uid,
@@ -73,27 +77,19 @@ export default function Perfil(){
         getUser();
     }, [route, auth]);
 
-    function ProfileBtn(){
-        if(user.uid===authUser.uid){
+    console.log('seguidores: ', user.followersUid);
+    console.log('id conectado: ', authUser.uid)
+
+    function FollowButton(){
+        if(user.followersUid){
             return(
                 <button
+                    onClick={() => Follow(user.uid, authUser.uid)}
                     className='bg-white hover:bg-secondary hover:outline-white rounded-full px-3 py-2 h-fit outline outline-gray-200 border-gray-600 mr-4 mt-3'
                 >
-                    Editar perfil
+                    Unfollow
                 </button>
             );
-        }
-        else{
-
-            return(
-                <button
-                    onClick={() => follow(user.uid, authUser.uid)}
-                    className='bg-white hover:bg-secondary hover:outline-white rounded-full px-3 py-2 h-fit outline outline-gray-200 border-gray-600 mr-4 mt-3'
-                >
-                    Seguir
-                </button>
-            )
-
         }
     }
 
@@ -108,7 +104,14 @@ export default function Perfil(){
                             <div className='flex justify-between'>
                                 <div className='bg-gray-600 h-24 w-24 rounded-full'>
                                 </div>
-                                <ProfileBtn />
+                                { user.uid===authUser.uid
+                                    ?   <Link href={`/${authUser.uid}/editProfile`}>
+                                            <a className='bg-white hover:bg-secondary hover:outline-white rounded-full px-3 py-2 h-fit outline outline-gray-200 border-gray-600 mr-4 mt-3'>
+                                                Editar perfil
+                                            </a>
+                                        </Link>
+                                    :   <FollowButton />
+                                }
                             </div>
                             <div className='mt-5'>
                                 { user?.displayName
