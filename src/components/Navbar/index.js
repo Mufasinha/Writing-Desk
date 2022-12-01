@@ -2,6 +2,7 @@ import { Signout } from '../../utils/userAuth';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth'
 import { userAuth } from '../../utils/firebase';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Navbar(){
@@ -34,9 +35,12 @@ export default function Navbar(){
                 <Link href={`/${user.uid}`}>
                     <a>
                         <div className='inline-flex items-center justify-center w-16 h-16'>
-                            <span className='block w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer'></span>
+                            { user?.userPhotoURL
+                            ? <Image src={user.userPhotoURL} width={40} height={40} className='block rounded-lg cursor-pointer' />
+                            : <span className='block w-10 h-10 bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer'></span>
+                            }
                         </div>
-                        </a>
+                    </a>
                 </Link>
         
                 <div className='border-t border-gray-600'>
@@ -48,6 +52,15 @@ export default function Navbar(){
                                         className='flex justify-center px-2 py-1.5 text-gray-700 rounded hover:bg-gray-50 hover:text-gray-500 relative group'
                                     >
                                         <i className='fa-solid fa-users'></i>
+                                    </a>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href={`/pesquisar`}>
+                                    <a
+                                        className='relative group flex justify-center px-2 py-1.5 text-gray-700 rounded hover:bg-gray-50 hover:text-gray-500'
+                                    >
+                                        <i className='fa-solid fa-magnifying-glass'></i>
                                     </a>
                                 </Link>
                             </li>
